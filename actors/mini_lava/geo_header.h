@@ -1,0 +1,14 @@
+extern const GeoLayout mini_lava_geo[];
+extern Lights1 mini_lava_f3dlite_material_lights;
+extern Lights1 mini_lava_Lava_lights;
+extern u8 mini_lava_blackdirt_i8[];
+extern u8 mini_lava_SUPER_MARIO_64_6D8CFA2F_0_2_all_ci8[];
+extern u8 mini_lava_SUPER_MARIO_64_6D8CFA2F_0_2_all_pal_rgba16[];
+extern Vtx mini_lava_Cube_mesh_layer_1_vtx_0[74];
+extern Gfx mini_lava_Cube_mesh_layer_1_tri_0[];
+extern Vtx mini_lava_Cube_mesh_layer_1_vtx_1[30];
+extern Gfx mini_lava_Cube_mesh_layer_1_tri_1[];
+extern Gfx mat_mini_lava_f3dlite_material[];
+extern Gfx mat_mini_lava_Lava[];
+extern Gfx mat_revert_mini_lava_Lava[];
+extern Gfx mini_lava_Cube_mesh_layer_1[];

@@ -2,12 +2,12 @@
 
 struct ObjectHitbox sRecoveryHeartHitbox = {
     /* interactType:      */ 0,
-    /* downOffset:        */ 0,
+    /* downOffset:        */ 50,
     /* damageOrCoinValue: */ 0,
     /* health:            */ 0,
     /* numLootCoins:      */ 0,
-    /* radius:            */ 50,
-    /* height:            */ 50,
+    /* radius:            */ 75,
+    /* height:            */ 150,
     /* hurtboxRadius:     */ 50,
     /* hurtboxHeight:     */ 50,
 };

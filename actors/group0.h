@@ -331,4 +331,44 @@ extern const Gfx white_particle_small_dl_end[];
 extern const Gfx white_particle_small_dl[];
 extern const Gfx white_particle_small_unused_dl[];
 
+#include "ballin/geo_header.h"
+
+#include "mario/geo_header.h"
+
+#include "mini_big_bounce/geo_header.h"
+
+#include "mini_marioikart/geo_header.h"
+
+#include "mini_snow/geo_header.h"
+
+#include "gold_ring/geo_header.h"
+
+#include "red_ring/geo_header.h"
+
+#include "fire_bar/geo_header.h"
+
+#include "retro_mini/geo_header.h"
+
+#include "mini_mario_kart/geo_header.h"
+
+#include "mini_lava/geo_header.h"
+
+#include "custom_heart/geo_header.h"
+
+#include "tutorial_base/geo_header.h"
+
+#include "tutorial_exclamation/geo_header.h"
+
+#include "mini_tutorial/geo_header.h"
+
+#include "mini_ethan/geo_header.h"
+
+#include "mini_logo/geo_header.h"
+
+#include "level_menu/geo_header.h"
+
+#include "bumper/geo_header.h"
+
+#include "mini_pinball/geo_header.h"
+
 #endif

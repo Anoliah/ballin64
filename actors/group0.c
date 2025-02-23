@@ -30,3 +30,23 @@
 #include "src/s2d_engine/s2d_config.h"
 #include FONT_C_FILE
 #endif
+
+#include "ballin/model.inc.c"
+#include "mini_big_bounce/model.inc.c"
+#include "mini_marioikart/model.inc.c"
+#include "mini_snow/model.inc.c"
+#include "gold_ring/model.inc.c"
+#include "red_ring/model.inc.c"
+#include "fire_bar/model.inc.c"
+#include "retro_mini/model.inc.c"
+#include "mini_mario_kart/model.inc.c"
+#include "mini_lava/model.inc.c"
+#include "custom_heart/model.inc.c"
+#include "tutorial_base/model.inc.c"
+#include "tutorial_exclamation/model.inc.c"
+#include "mini_tutorial/model.inc.c"
+#include "mini_ethan/model.inc.c"
+#include "mini_logo/model.inc.c"
+#include "level_menu/model.inc.c"
+#include "bumper/model.inc.c"
+#include "mini_pinball/model.inc.c"

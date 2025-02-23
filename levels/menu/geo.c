@@ -15,6 +15,12 @@
 
 #include "levels/menu/header.h"
 
+#include "menu/debug_level_select.h"
+#include "menu/intro_geo.h"
+
+#include "menu/lvl_select.h"
+
+
 // 0x0E0001D0
 const GeoLayout geo_menu_mario_save_button[] = {
    GEO_NODE_START(),
@@ -192,6 +198,35 @@ const GeoLayout geo_menu_act_selector_strings[] = {
       GEO_ZBUFFER(0),
       GEO_OPEN_NODE(),
          GEO_ASM(0, geo_act_selector_strings),
+      GEO_CLOSE_NODE(),
+   GEO_CLOSE_NODE(),
+   GEO_END(),
+};
+
+//Custom
+const GeoLayout geo_menu_lvl_selector_strings[] = {
+   GEO_NODE_SCREEN_AREA(10, SCREEN_CENTER_X, SCREEN_CENTER_Y, SCREEN_CENTER_X, SCREEN_CENTER_Y),
+   GEO_OPEN_NODE(),
+      GEO_ZBUFFER(0),
+      GEO_OPEN_NODE(),
+         GEO_NODE_ORTHO(100),
+         GEO_OPEN_NODE(),
+            GEO_ASM(0, geo_intro_regular_backdrop),
+         GEO_CLOSE_NODE(),
+      GEO_CLOSE_NODE(),
+      GEO_ZBUFFER(1),
+      GEO_OPEN_NODE(),
+         GEO_CAMERA_FRUSTUM(45, 100, 25000),
+         GEO_OPEN_NODE(),
+            GEO_CAMERA(CAMERA_MODE_NONE, 0, 0, 1000, 0, 0, 0, 0x00000000),
+            GEO_OPEN_NODE(),
+               GEO_RENDER_OBJ(),
+            GEO_CLOSE_NODE(),
+         GEO_CLOSE_NODE(),
+      GEO_CLOSE_NODE(),
+      GEO_ZBUFFER(0),
+      GEO_OPEN_NODE(),
+         GEO_ASM(0, geo_lvl_select_strings_and_glyphs),
       GEO_CLOSE_NODE(),
    GEO_CLOSE_NODE(),
    GEO_END(),

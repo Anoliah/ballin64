@@ -13,45 +13,60 @@
 #endif
 
 DEFINE_DIALOG(DIALOG_000, 1, 6, 30, 200, _("\
-Wow! You're smack in the\n\
-middle of the battlefield.\n\
-You'll find the Power\n\
-Stars that Bowser stole\n\
-inside the painting\n\
-worlds.\n\
-First, talk to the\n\
-Bob-omb Buddy. (Press [B]\n\
-to talk.) He'll certainly\n\
-help you out, and so will\n\
-his " COMRADES " in other\n\
-areas.\n\
-To read signs, stop, face\n\
-them and press [B]. Press [A]\n\
-or [B] to scroll ahead. You\n\
-can talk to some other\n\
-characters by facing them\n\
-and pressing [B]."))
+Welcome to Ballin 64!\n\
+\n\
+As you can see, Mario has\n\
+been transformed into a \n\
+big beautiful bouncy ball.\n\
+With this newfound shape, \n\
+comes a brand new set of \n\
+controls, so make sure to \n\
+read the tutorial markers\n\
+(you're reading one right \n\
+now) as they will teach\n\
+you about Mario's new \n\
+capabilities.\n\
+\n\
+\n\
+\n\
+\n\
+\n\
+CREDITS:\n\
+Ballin 64 made by: Anoliah\n\
+For SimpleFlips' Slide \n\
+Theme competition 2024\n\
+\n\
+MUSIC:\n\
+Bullet Station:\n\
+Converted by PablosCorner\n\
+Mario Circuit:\n\
+Converted by PablosCorner\n\
+SMK - Character Select:\n\
+Converted by \n\
+ShrooboidBrat\n\
+\n\
+Various MIDIs from\n\
+VGmusic.com\n\
+\n\
+Mario Font by fsuarez913\n\
+\n\
+Various sprites, textures, \n\
+and sounds from\n\
+vg-resource.com\n\
+\n\
+Additional Thanks:\n\
+The HackerSM64 team\n\
+\n\
+Good luck, and have fun!\n\
+Go and be the best ball \n\
+you can!"))
 
 DEFINE_DIALOG(DIALOG_001, 1, 4, 95, 200, _("\
-Watch out! If you wander\n\
-around here, you're liable\n\
-to be " PLASTERED " by a\n\
-water bomb!\n\
-Those enemy Bob-ombs love\n\
-to fight, and they're\n\
-always finding ways to\n\
-attack.\n\
-This meadow has become\n\
-a battlefield ever since\n\
-the Big Bob-omb got his\n\
-paws on the Power Star.\n\
-Can you recover the Star\n\
-for us? Cross the bridge\n\
-and go left up the path\n\
-to find the Big Bob-omb.\n\
-Please come back to see\n\
-me after you've retrieved\n\
-the Power Star!"))
+If you bump into a wall,\n\
+you will bounce off of it.\n\
+If you press [A] at the right time,\n\
+you will gain additional height!\n\
+Even in ball form, you can wall kick!"))
 
 DEFINE_DIALOG(DIALOG_002, 1, 4, 95, 200, _("\
 Hey, you! It's dangerous\n\
@@ -134,18 +149,20 @@ Here you go--you've won\n\
 it, fair and square!"))
 
 DEFINE_DIALOG(DIALOG_008, 1, 4, 30, 200, _("\
-BEWARE OF CHAIN CHOMP\n\
-Extreme Danger!\n\
-Get close and press [C]^\n\
-for a better look.\n\
-Scary, huh?\n\
-See the Red Coin on top\n\
-of the stake?\n\
-\n\
-When you collect eight of\n\
-them, a Power Star will\n\
-appear in the meadow\n\
-across the bridge."))
+The best way to gain \n\
+momentum is to roll down \n\
+a hill. Press [A] shortly\n\
+after you land to gain \n\
+additional height on your \n\
+bounce. The faster you go,\n\
+the higher your bounce will\n\
+be. If you find yourself\n\
+Bouncing down a hill\n\
+rather than rolling, try\n\
+pressing [Z] to do a \n\
+ground pound.\n\
+Try to make it to the \n\
+highest platform!"))
 
 DEFINE_DIALOG(DIALOG_009, 1, 5, 30, 200, _("\
 Long time, no see! Wow,\n\
@@ -220,19 +237,42 @@ Do you want to Save?\n\
 //You Bet//Not Now"))
 
 DEFINE_DIALOG(DIALOG_015, 1, 4, 30, 200, _("\
-You can punch enemies to\n\
-knock them down. Press [A]\n\
-to jump, [B] to punch.\n\
-Press [A] then [B] to Kick.\n\
-To pick something up,\n\
-press [B], too. To throw\n\
-something you're holding,\n\
-press [B] again."))
+This gold ring is the end \n\
+of the level. Go through it\n\
+and you will be graded on\n\
+your performance.\n\
+Each slide has a specific\n\
+target time to match.\n\
+Get an A rank or better\n\
+to earn a star!\n\
+You can see if a slide's\n\
+target time has been\n\
+cleared by looking for\n\
+the star icon next to\n\
+the 'Rank' display\n\
+on the level select menu.\n\
+Because this slide is a\n\
+tutorial, you aren't\n\
+actually graded on your\n\
+performance here.\n\
+\n\
+\n\
+You can restart the\n\
+level and exit course\n\
+in the pause menu whenever\n\
+you want. Additionally,\n\
+you can press [Z] and Start\n\
+at the same time to \n\
+instantly reset."))
 
 DEFINE_DIALOG(DIALOG_016, 1, 3, 30, 200, _("\
-Hop on the shiny shell and\n\
-ride wherever you want to\n\
-go! Shred those enemies!"))
+If you bump into a wall,\n\
+you will bounce off of it.\n\
+If you press [A] at the\n\
+right time, you will gain\n\
+additional height!\n\
+Even in ball form, you can\n\
+wall kick!"))
 
 DEFINE_DIALOG(DIALOG_017, 1, 4, 30, 200, _("\
 I'm the Big Bob-omb, lord\n\

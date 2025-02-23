@@ -17,6 +17,8 @@ extern const GeoLayout geo_menu_generic_button[];
 extern const GeoLayout geo_menu_file_select_strings_and_menu_cursor[];
 extern const GeoLayout geo_menu_act_selector_strings[];
 
+extern const GeoLayout geo_menu_lvl_selector_strings[];
+
 // leveldata
 extern const Gfx dl_menu_mario_save_button_base[];
 extern const Gfx dl_menu_mario_new_button_base[];
@@ -46,6 +48,7 @@ extern const u8 eu_course_strings_de_table[];
 #endif
 
 // script
+extern const LevelScript level_goto_level_select[];
 extern const LevelScript level_main_menu_entry_file_select[];
 extern const LevelScript level_main_menu_entry_act_select[];
 

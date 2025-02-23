@@ -10,13 +10,72 @@
 #include "game/level_update.h"
 #include "menu/file_select.h"
 #include "menu/star_select.h"
+#include "menu/lvl_select.h"
 
 #include "levels/scripts.h"
+#include "levels/intro/header.h"
 
 #include "actors/common1.h"
+#include "actors/group0.h"
 
 #include "make_const_nonconst.h"
 #include "levels/menu/header.h"
+
+
+const LevelScript level_reload_game[] = {
+    SLEEP(/*frames*/ 16),
+    CLEAR_LEVEL(),
+    SLEEP_BEFORE_EXIT(/*frames*/ 1),
+    EXIT_AND_EXECUTE(/*seg*/ SEGMENT_MENU_INTRO, /*script*/ _introSegmentRomStart, /*scriptEnd*/ _introSegmentRomEnd, /*entry*/ script_intro_splash_screen)
+};
+
+const LevelScript level_goto_level_select[] = {
+    LOAD_YAY0(          /*seg*/ SEGMENT_GROUP0_YAY0,   _group0_yay0SegmentRomStart,  _group0_yay0SegmentRomEnd),
+    LOAD_RAW_WITH_CODE( /*seg*/ SEGMENT_GROUP0_GEO,     _group0_geoSegmentRomStart,   _group0_geoSegmentRomEnd,  _group0_geoSegmentBssStart,  _group0_geoSegmentBssEnd),
+
+    INIT_LEVEL(),
+    LOAD_GODDARD(),
+    LOAD_LEVEL_DATA(menu),
+    LOAD_BEHAVIOR_DATA(),
+    LOAD_TITLE_SCREEN_BG(),
+    ALLOC_LEVEL_POOL(),
+
+    LOAD_MODEL_FROM_GEO(MODEL_BALLIN,     ballin_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_MINI_BIG_BOUNCE,     mini_big_bounce_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_MINI_MARIOKART,      mini_mario_kart_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_MINI_SNOW,           mini_snow_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_MINI_RETRO,          retro_mini_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_MINI_LAVA,           mini_lava_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_MINI_PINBALL,        mini_pinball_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_MINI_TUTORIAL,       mini_tutorial_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_MINI_ETHAN,          mini_ethan_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_MINI_LOGO,           mini_logo_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_LEVEL_SELECT_BG,     level_menu_geo),
+
+
+    AREA(/*index*/ 3, geo_menu_lvl_selector_strings),
+        OBJECT(/*model*/ MODEL_NONE, /*pos*/ -100, 15, 0, /*angle*/ 0, 0, 0, /*behParam*/ BP(0x04, 0x00, 0x00, 0x00), /*beh*/ bhvLevelSelector),
+        OBJECT(/*model*/ MODEL_MINI_LOGO, /*pos*/ 100, 110, 675, /*angle*/ 0, 0, 0, /*behParam*/ BP(0x00, 0x00, 0x00, 0x00), /*beh*/ bhvMiniLogo),
+        OBJECT(/*model*/ MODEL_BALLIN, /*pos*/ 120, 90, 750, /*angle*/ 0, 0, 0, /*behParam*/ BP(0x00, 0x00, 0x00, 0x00), /*beh*/ bhvBallinMenu),
+        //OBJECT(/*model*/ MODEL_BALLIN, /*pos*/ -100, 25, 300, /*angle*/ 0, 0, 0, /*behParam*/ BP(0x00, 0x00, 0x00, 0x00), /*beh*/ bhvBallinStartup),
+        OBJECT(/*model*/ MODEL_LEVEL_SELECT_BG, /*pos*/ -100, -125, 0, /*angle*/ 0, 0, 0, /*behParam*/ BP(0x00, 0x00, 0x00, 0x00), /*beh*/ bhvMiniLogo),
+        TERRAIN(/*terrainData*/ main_menu_seg7_collision),
+    END_AREA(),
+
+    FREE_LEVEL_POOL(),
+    LOAD_AREA(/*area*/ 3),
+    SET_MENU_MUSIC(/*seq*/ SEQ_MENU_BULLET_STATION),
+    TRANSITION(/*transType*/ WARP_TRANSITION_FADE_FROM_COLOR, /*time*/ 16, /*color*/ 0xFF, 0xFF, 0xFF),
+    CALL_LOOP(/*arg*/ 0, /*func*/ lvl_select_update_and_select_level),
+    STOP_MUSIC(/*fadeOutTime*/ 0x00BE),
+    JUMP_IF(/*op*/ OP_EQ, /*arg*/ LEVEL_RESTART_GAME,  level_reload_game),
+    TRANSITION(/*transType*/ WARP_TRANSITION_FADE_INTO_COLOR, /*time*/ 16, /*color*/ 0xFF, 0xFF, 0xFF),
+    SLEEP(/*frames*/ 16),
+    CLEAR_LEVEL(),
+    SLEEP_BEFORE_EXIT(/*frames*/ 1),
+    EXIT_AND_EXECUTE(/*seg*/ SEGMENT_GLOBAL_LEVEL_SCRIPT, _scriptsSegmentRomStart, _scriptsSegmentRomEnd, level_main_scripts_entry),
+};
+
 
 const LevelScript level_main_menu_entry_file_select[] = {
     INIT_LEVEL(),
@@ -42,19 +101,20 @@ const LevelScript level_main_menu_entry_file_select[] = {
     END_AREA(),
 
     FREE_LEVEL_POOL(),
-    LOAD_AREA(/*area*/ 1),
-    SET_MENU_MUSIC(/*seq*/ SEQ_MENU_FILE_SELECT),
-    TRANSITION(/*transType*/ WARP_TRANSITION_FADE_FROM_COLOR, /*time*/ 16, /*color*/ 0xFF, 0xFF, 0xFF),
-    CALL(     /*arg*/ 0, /*func*/ lvl_init_menu_values_and_cursor_pos),
-    CALL_LOOP(/*arg*/ 0, /*func*/ lvl_update_obj_and_load_file_selected),
-    GET_OR_SET(/*op*/ OP_SET, /*var*/ VAR_CURR_SAVE_FILE_NUM),
-    STOP_MUSIC(/*fadeOutTime*/ 0x00BE),
-    TRANSITION(/*transType*/ WARP_TRANSITION_FADE_INTO_COLOR, /*time*/ 16, /*color*/ 0xFF, 0xFF, 0xFF),
-    SLEEP(/*frames*/ 16),
-    CLEAR_LEVEL(),
+    //CUSTOM REMOVE FILE SELECT
+    //LOAD_AREA(/*area*/ 1),
+    //SET_MENU_MUSIC(/*seq*/ SEQ_MENU_FILE_SELECT),
+    //TRANSITION(/*transType*/ WARP_TRANSITION_FADE_FROM_COLOR, /*time*/ 16, /*color*/ 0xFF, 0xFF, 0xFF),
+    //CALL(     /*arg*/ 0, /*func*/ lvl_init_menu_values_and_cursor_pos),
+    //CALL_LOOP(/*arg*/ 0, /*func*/ lvl_update_obj_and_load_file_selected),
+    //GET_OR_SET(/*op*/ OP_SET, /*var*/ VAR_CURR_SAVE_FILE_NUM),
+    //STOP_MUSIC(/*fadeOutTime*/ 0x00BE),
+    //TRANSITION(/*transType*/ WARP_TRANSITION_FADE_INTO_COLOR, /*time*/ 16, /*color*/ 0xFF, 0xFF, 0xFF),
+    //SLEEP(/*frames*/ 16),
+    //CLEAR_LEVEL(),
     SLEEP_BEFORE_EXIT(/*frames*/ 1),
     SET_REG(/*value*/ START_LEVEL),
-    EXIT_AND_EXECUTE(/*seg*/ SEGMENT_GLOBAL_LEVEL_SCRIPT, _scriptsSegmentRomStart, _scriptsSegmentRomEnd, level_main_scripts_entry),
+    EXIT_AND_EXECUTE(/*seg*/ SEGMENT_MENU_INTRO, _menuSegmentRomStart, _menuSegmentRomEnd, level_goto_level_select),
 };
 
 const LevelScript level_main_menu_entry_act_select_exit[] = {

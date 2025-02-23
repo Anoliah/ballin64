@@ -1,0 +1,12 @@
+extern const GeoLayout mini_big_bounce_geo[];
+extern Lights1 mini_big_bounce_Slide_lights;
+extern Lights1 mini_big_bounce_Bricks_lights;
+extern u8 mini_big_bounce_SUPER_MARIO_64_D1F883F5_0_2_all_rgba32[];
+extern u8 mini_big_bounce_SUPER_MARIO_64_1ECB06AF_0_2_all_rgba32[];
+extern Vtx mini_big_bounce_Plane_mesh_layer_1_vtx_0[10];
+extern Gfx mini_big_bounce_Plane_mesh_layer_1_tri_0[];
+extern Vtx mini_big_bounce_Plane_mesh_layer_1_vtx_1[74];
+extern Gfx mini_big_bounce_Plane_mesh_layer_1_tri_1[];
+extern Gfx mat_mini_big_bounce_Slide[];
+extern Gfx mat_mini_big_bounce_Bricks[];
+extern Gfx mini_big_bounce_Plane_mesh_layer_1[];

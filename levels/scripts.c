@@ -111,6 +111,14 @@ const LevelScript level_main_scripts_entry[] = {
     LOAD_MODEL_FROM_GEO(MODEL_EXPLOSION,               explosion_geo),
     LOAD_MODEL_FROM_GEO(MODEL_DIRT_ANIMATION,          dirt_animation_geo),
     LOAD_MODEL_FROM_GEO(MODEL_CARTOON_STAR,            cartoon_star_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_BALLIN,                  ballin_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_GOLD_RING,               gold_ring_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_RED_RING,                red_ring_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_FIRE_BAR,                fire_bar_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_CUSTOM_HEART,            custom_heart_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_TUTORIAL_BASE,           tutorial_base_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_TUTORIAL_EXCLAMATION,    tutorial_exclamation_geo),
+    LOAD_MODEL_FROM_GEO(MODEL_BUMPER,                  bumper_geo),
 #ifdef IA8_30FPS_COINS
     LOAD_MODEL_FROM_GEO(MODEL_SILVER_COIN,             silver_coin_geo),
     LOAD_MODEL_FROM_GEO(MODEL_SILVER_COIN_NO_SHADOW,   silver_coin_no_shadow_geo),
@@ -147,7 +155,8 @@ static const LevelScript goto_mario_head_dizzy[] = {
 };
 
 static const LevelScript goto_debug_level_select[] = {
-    EXIT_AND_EXECUTE_WITH_CODE(/*seg*/ SEGMENT_MENU_INTRO, _introSegmentRomStart, _introSegmentRomEnd, level_intro_entry_level_select, _introSegmentBssStart, _introSegmentBssEnd),
+    //Custom
+    EXIT_AND_EXECUTE(/*seg*/ SEGMENT_MENU_INTRO, _menuSegmentRomStart, _menuSegmentRomEnd, level_goto_level_select),
 };
 
 // Include the level jumptable.

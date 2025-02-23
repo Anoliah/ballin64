@@ -355,6 +355,9 @@ sound_ref .sound_action_jump_default
 sound_ref .sound_action_jump_default
 sound_ref .sound_action_jump_default
 sound_ref .sound_action_jump_default
+sound_ref .sound_action_ballin_bounce
+sound_ref .sound_action_ballin_dash
+sound_ref .sound_action_ballin_bump
 
 .sound_action_jump_default:
 chan_setbank 1
@@ -1527,6 +1530,41 @@ chan_setinstr 8
 chan_setlayer 1, .layer_3F1
 chan_end
 
+//Custom
+
+.sound_action_ballin_bounce:
+chan_setbank 0
+chan_setinstr 6
+chan_setval 1
+chan_setlayer 0, .layer_F80C
+chan_end
+
+.layer_F80C:
+layer_note1 41, 0x3c, 160
+layer_end
+
+.sound_action_ballin_dash:
+chan_setbank 0
+chan_setinstr 7
+chan_setval 1
+chan_setlayer 0, .layer_F80D
+chan_end
+
+.layer_F80D:
+layer_note1 41, 0x3c, 160
+layer_end
+
+.sound_action_ballin_bump:
+chan_setbank 0
+chan_setinstr 8
+chan_setval 1
+chan_setlayer 0, .layer_F80F
+chan_end
+
+.layer_F80F:
+layer_note1 39, 0x3c, 90
+layer_end
+
 .channel1_table:
 sound_ref .sound_moving_slide_default
 sound_ref .sound_moving_slide_grass
@@ -1584,6 +1622,8 @@ sound_ref .sound_moving_riding_shell_spooky
 sound_ref .sound_moving_riding_shell_snow
 sound_ref .sound_moving_riding_shell_ice
 sound_ref .sound_moving_riding_shell_sand
+sound_ref .sound_moving_ballin_roll
+sound_ref .sound_moving_ballin_slip
 
 .sound_moving_slide_default:
 chan_setbank 3
@@ -1976,6 +2016,34 @@ layer_delay 1
 layer_portamento 0x81, 41, 255
 layer_note1 56, 0xa, 127
 layer_jump .layer_BAA
+
+//CUSTOM
+.sound_moving_ballin_roll:
+chan_setbank 3
+chan_setinstr 10
+chan_setlayer 0, .layer_F0E
+chan_end
+
+.layer_F0E:
+layer_somethingon
+.layer_F0F:
+layer_note1 40, 0x12c, 90
+layer_jump .layer_F0F
+layer_end
+
+//CUSTOM
+.sound_moving_ballin_slip:
+chan_setbank 3
+chan_setinstr 11
+chan_setlayer 0, .layer_F10
+chan_end
+
+.layer_F10:
+layer_somethingon
+.layer_F11:
+layer_note1 40, 0x12c, 75
+layer_jump .layer_F11
+layer_end
 
 .channel2_table:
 sound_ref .sound_mario_jump_yah

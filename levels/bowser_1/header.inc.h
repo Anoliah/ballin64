@@ -1,0 +1,10 @@
+extern const GeoLayout bowser_1_area_1_geo[];
+extern const GeoLayout bowser_1_area_1[];
+extern const Collision bowser_1_area_1_collision[];
+extern const MacroObject bowser_1_area_1_macro_objs[];
+extern Lights1 bowser_1_dl_basic_ground_lights;
+extern u8 bowser_1_dl_SUPER_MARIO_64_1EFFD4E0_0_2_all_rgba32[];
+extern Vtx bowser_1_dl_Plane_mesh_layer_1_vtx_0[4];
+extern Gfx bowser_1_dl_Plane_mesh_layer_1_tri_0[];
+extern Gfx mat_bowser_1_dl_basic_ground[];
+extern Gfx bowser_1_dl_Plane_mesh_layer_1[];

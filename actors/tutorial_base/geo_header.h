@@ -1,0 +1,14 @@
+extern const GeoLayout tutorial_base_geo[];
+extern Lights1 tutorial_base_Base_lights;
+extern Lights1 tutorial_base_Glow_lights;
+extern u8 tutorial_base_TutMsgGlowBase_rgba32[];
+extern u8 tutorial_base_TutMsgGlow_rgba32[];
+extern Vtx tutorial_base_Circle_mesh_layer_5_vtx_0[12];
+extern Gfx tutorial_base_Circle_mesh_layer_5_tri_0[];
+extern Vtx tutorial_base_Circle_mesh_layer_5_vtx_1[48];
+extern Gfx tutorial_base_Circle_mesh_layer_5_tri_1[];
+extern Gfx mat_tutorial_base_Base[];
+extern Gfx mat_revert_tutorial_base_Base[];
+extern Gfx mat_tutorial_base_Glow[];
+extern Gfx mat_revert_tutorial_base_Glow[];
+extern Gfx tutorial_base_Circle_mesh_layer_5[];

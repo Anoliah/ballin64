@@ -63,12 +63,12 @@
 /**
  * Makes signs and NPCs easier to talk to.
  */
-// #define EASIER_DIALOG_TRIGGER
+#define EASIER_DIALOG_TRIGGER
 
 /**
  * Shows an "A" when Mario is able to talk [requires EASIER_DIALOG_TRIGGER].
  */
-// #define DIALOG_INDICATOR
+#define DIALOG_INDICATOR
 
 /**
  * Include the English characters that were missing from US segment2 and the rumble pak texture if using rumble.
@@ -97,4 +97,4 @@
  * The level that the game starts with immediately after file select.
  * The levelscript needs to have a MARIO_POS command for this to work.
  */
-#define START_LEVEL LEVEL_CASTLE_GROUNDS
+#define START_LEVEL LEVEL_BOB

@@ -1339,5 +1339,26 @@ os16112*/
 #define /*0x110*/ os16110                                       OBJECT_FIELD_S16(0x22, 0)
 #define /*0x112*/ os16112                                       OBJECT_FIELD_S16(0x22, 1)
 
+//CUSTOM
+
+//Gold/red rings
+#define /*0x100*/ O_GOLD_RING_NORMAL_INDEX        0x1E
+#define /*0x100*/ O_GOLD_RING_NORMAL_X_INDEX      (O_GOLD_RING_NORMAL_INDEX + 0) // 0x1E
+#define /*0x104*/ O_GOLD_RING_NORMAL_Y_INDEX      (O_GOLD_RING_NORMAL_INDEX + 1) // 0x1F
+#define /*0x108*/ O_GOLD_RING_NORMAL_Z_INDEX      (O_GOLD_RING_NORMAL_INDEX + 2) // 0x20
+#define /*0x100*/ oGoldRingNormalVec              OBJECT_FIELD_F32(O_GOLD_RING_NORMAL_INDEX)
+#define /*0x100*/ oGoldRingNormalX                OBJECT_FIELD_F32(O_GOLD_RING_NORMAL_X_INDEX)
+#define /*0x104*/ oGoldRingNormalY                OBJECT_FIELD_F32(O_GOLD_RING_NORMAL_Y_INDEX)
+#define /*0x108*/ oGoldRingNormalZ                OBJECT_FIELD_F32(O_GOLD_RING_NORMAL_Z_INDEX)
+#define /*0x10C*/ oGoldRingMarioDistInFront       OBJECT_FIELD_F32(0x21)
+
+//Ballin Menu
+#define /*0x0F4*/ oBallinMenuLastX                              OBJECT_FIELD_S32(0x1B)
+#define /*0x0F8*/ oBallinMenuLastY                              OBJECT_FIELD_S32(0x1C)
+
+//Bumper
+#define /*0x0F4*/ oBumperScale                                  OBJECT_FIELD_F32(0x1B)
+#define /*0x0F8*/ oBumperSlideLength                            OBJECT_FIELD_S32(0x1C)
+#define /*0x0F8*/ oBumperTimer                                  OBJECT_FIELD_S32(0x1D)
 
 #endif // OBJECT_FIELDS_H

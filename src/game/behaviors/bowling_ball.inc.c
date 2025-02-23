@@ -3,11 +3,11 @@
 static struct ObjectHitbox sBowlingBallHitbox = {
     /* interactType:      */ INTERACT_DAMAGE,
     /* downOffset:        */ 0,
-    /* damageOrCoinValue: */ 2,
+    /* damageOrCoinValue: */ 16,
     /* health:            */ 0,
     /* numLootCoins:      */ 0,
-    /* radius:            */ 100,
-    /* height:            */ 150,
+    /* radius:            */ 125,
+    /* height:            */ 250,
     /* hurtboxRadius:     */ 0,
     /* hurtboxHeight:     */ 0,
 };
@@ -36,6 +36,24 @@ static Trajectory sThiTinyMetalBallTraj[] = {
     TRAJECTORY_POS(6, /*pos*/   250,  -491, -1433),
     TRAJECTORY_POS(7, /*pos*/   862,  -613, -1449),
     TRAJECTORY_POS(8, /*pos*/  1058, -1960, -1449),
+    TRAJECTORY_END(),
+};
+
+
+static Trajectory sPinballBallTraj[] = {
+    TRAJECTORY_POS(0, /*pos*/ 14093,    9678,  13898),
+    TRAJECTORY_POS(1, /*pos*/ 14021,    8368, 2410),
+    TRAJECTORY_POS(2, /*pos*/ 14098,    8104, 1950),
+    TRAJECTORY_POS(3, /*pos*/ 14524,    7854, 990),
+    TRAJECTORY_POS(4, /*pos*/ 14435,    7684, -592),
+    TRAJECTORY_POS(5, /*pos*/ 13927,    7410, -2566),
+    TRAJECTORY_POS(6, /*pos*/ 12865,    7241, -4251),
+    TRAJECTORY_POS(7, /*pos*/ 12066,    6829, -5105),
+    TRAJECTORY_POS(8, /*pos*/ 11229,    6829, -13000),
+    TRAJECTORY_POS(9, /*pos*/ 6993,     6007, -7200),
+    TRAJECTORY_POS(10, /*pos*/-181,     4606, -13000),
+    TRAJECTORY_POS(11, /*pos*/-6435,    3385, -7200),
+    TRAJECTORY_POS(12, /*pos*/-13552,   1950, -12591),
     TRAJECTORY_END(),
 };
 
@@ -73,6 +91,10 @@ void bowling_ball_set_waypoints(void) {
 
         case BBALL_BP_STYPE_THI_SMALL:
             o->oPathedStartWaypoint = (struct Waypoint *) sThiTinyMetalBallTraj;
+            break;
+
+        case BBALL_BP_STYPE_PINBALL:
+            o->oPathedStartWaypoint = (struct Waypoint *) sPinballBallTraj;
             break;
     }
 }
@@ -134,6 +156,13 @@ void bhv_bowling_ball_initialize_loop(void) {
             cur_obj_scale(0.3f);
             o->oGraphYOffset = 39.0f;
             break;
+        
+        case BBALL_BP_STYPE_PINBALL:
+            o->oForwardVel = 35.0f;
+            cur_obj_scale(3.0f);
+            o->oGraphYOffset = 350.0f;
+            o->oBuoyancy = 1.0f;
+            break;
     }
 }
 
@@ -153,7 +182,7 @@ void bhv_bowling_ball_loop(void) {
         set_camera_shake_from_point(SHAKE_POS_BOWLING_BALL, o->oPosX, o->oPosY, o->oPosZ);
     }
 
-    set_object_visibility(o, 4000);
+    set_object_visibility(o, 16000);
 }
 
 void bhv_generic_bowling_ball_spawner_init(void) {
@@ -171,6 +200,12 @@ void bhv_generic_bowling_ball_spawner_init(void) {
         case BBALL_BP_STYPE_BOB_LOWER:
             o->oBBallSpawnerMaxSpawnDist = 6000.0f;
             o->oBBallSpawnerSpawnOdds = 2.0f;
+            break;
+
+        case BBALL_BP_STYPE_PINBALL:
+            o->oBBallSpawnerMaxSpawnDist = 32000.0f;
+            o->oBBallSpawnerSpawnOdds = 0.0f;
+            o->oBBallSpawnerPeriodMinus1 = 127;
             break;
     }
 }

@@ -1867,7 +1867,7 @@ void check_death_barrier(struct MarioState *m) {
 }
 
 void check_lava_boost(struct MarioState *m) {
-    if (!(m->action & ACT_FLAG_RIDING_SHELL) && m->pos[1] < m->floorHeight + 10.0f) {
+    if (!((m->action & ACT_FLAG_RIDING_SHELL) || (m->action & ACT_EXPLODING)) && m->pos[1] < m->floorHeight + 10.0f) {
         if (!(m->flags & MARIO_METAL_CAP)) {
             m->hurtCounter += (m->flags & MARIO_CAP_ON_HEAD) ? 12 : 18;
         }
@@ -1897,8 +1897,59 @@ void pss_end_slide(struct MarioState *m) {
     }
 }
 
+//CUSTOM
+//Boosts Mario
+void boost_pad(struct MarioState *m) {
+    if(m->pos[1] < m->floorHeight + 10.0f){
+        set_mario_action(m, ACT_BUTT_SLIDE, 0);
+        m->slideVelX = sins(m->faceAngle[1]) * 250.0f;
+        m->slideVelZ = coss(m->faceAngle[1]) * 250.0f;
+        //Play sound if speed increase warrants it
+        //This works but is unsatisfying, could be better
+        if(m->forwardVel < 230.0f){
+            play_sound(SOUND_ACTION_BALLIN_DASH, m->marioObj->header.gfx.cameraToObject);
+        }
+    }
+}
+
+//CUSTOM
+//Slows Mario
+void rough(struct MarioState *m) {
+    if(m->pos[1] < m->floorHeight + 10.0f){
+        set_mario_action(m, ACT_WALKING, 0);
+        if(m->forwardVel > 33.0f){
+            m->forwardVel *= 0.9f;
+            //TODO: Make better sound?
+            play_sound(SOUND_MOVING_TERRAIN_RIDING_SHELL, m->marioObj->header.gfx.cameraToObject);
+        }
+    }
+}
+
+//CUSTOM
+//Kills Mario
+void instant_death(struct MarioState *m) {
+    if(m->pos[1] < m->floorHeight + 10.0f){
+        m->health = 0;
+    }
+}
+
+//CUSTOM
+//Causes Mario to spin out
+void oil(struct MarioState *m) {
+    if((m->pos[1] < m->floorHeight + 10.0f)){
+        set_mario_action(m, ACT_OIL_SLIP, 0);
+        play_sound(SOUND_MOVING_BALLIN_SLIP, m->marioObj->header.gfx.cameraToObject);
+        m->slideVelX = 0;
+        m->slideVelZ = 0;
+    }
+}
+
 void mario_handle_special_floors(struct MarioState *m) {
     if ((m->action & ACT_GROUP_MASK) == ACT_GROUP_CUTSCENE) {
+        return;
+    }
+
+    if(m->action == ACT_EXPLODING) {
         return;
     }
 
@@ -1921,6 +1972,22 @@ void mario_handle_special_floors(struct MarioState *m) {
 
             case SURFACE_TIMER_END:
                 pss_end_slide(m);
+                break;
+
+            case SURFACE_BOOST_PAD:
+                boost_pad(m);
+                break;
+
+            case SURFACE_ROUGH:
+                rough(m);
+                break;
+
+            case SURFACE_INSTANT_DEATH:
+                instant_death(m);
+                break;
+
+            case SURFACE_OIL:
+                oil(m);
                 break;
         }
 

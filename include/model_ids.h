@@ -572,4 +572,28 @@
 #define MODEL_VCUTM_WARP_PIPE                     MODEL_LEVEL_GEOMETRY_16   // warp_pipe_geo
 #define MODEL_CASTLE_GROUNDS_WARP_PIPE            MODEL_LEVEL_GEOMETRY_16   // warp_pipe_geo
 
+//CUSTOM
+#define MODEL_BALLIN                    0xF1                                //ballin_geo
+#define MODEL_GOLD_RING                 0xF2                                //gold_ring_geo
+#define MODEL_RED_RING                  0xF3                                //red_ring_geo
+#define MODEL_FIRE_BAR                  0xF4                                //fire_bar_geo
+#define MODEL_CUSTOM_HEART              0xF5                                //custom_heart_geo
+#define MODEL_TUTORIAL_BASE             0xF6                                //tutorial_base_geo
+#define MODEL_TUTORIAL_EXCLAMATION      0xF7                                //tutorial_exclamation_geo
+#define MODEL_BUMPER                    0xF8                                //bumper_geo
+
+//MENU
+#define MODEL_MINI_LOGO                 0xC1                                //mini_logo
+#define MODEL_LEVEL_SELECT_BG           0xC2                                //level_menu_geo
+
+//MINIS
+#define MODEL_MINI_BIG_BOUNCE           0xD2                                //mini_big_bounce_geo
+#define MODEL_MINI_MARIOKART            0xD3                                //mini_mario_kart_geo
+#define MODEL_MINI_SNOW                 0xD4                                //mini_snow_geo
+#define MODEL_MINI_RETRO                0xD5                                //mini_retro_geo
+#define MODEL_MINI_LAVA                 0xD6                                //mini_lava_geo
+#define MODEL_MINI_TUTORIAL             0xD7                                //mini_tutorial_geo
+#define MODEL_MINI_ETHAN                0xD8                                //mini_ethan_geo
+#define MODEL_MINI_PINBALL              0xD9                                //mini_pinball_geo
+
 #endif // MODEL_IDS_H

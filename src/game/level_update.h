@@ -86,6 +86,12 @@ extern struct CreditsEntry *gCurrCreditsEntry;
 extern struct MarioState gMarioStates[];
 extern struct MarioState *gMarioState;
 
+//CUSTOM
+extern u8 gCanRestartLevel;
+
+extern u16 gSlideTimeToBeat;
+
+
 extern s16 sCurrPlayMode;
 extern s16 sTransitionTimer;
 extern void (*sTransitionUpdate)(s16 *);
@@ -148,7 +154,8 @@ enum PlayModes {
     PLAY_MODE_PAUSED,
     PLAY_MODE_CHANGE_AREA,
     PLAY_MODE_CHANGE_LEVEL,
-    PLAY_MODE_FRAME_ADVANCE
+    PLAY_MODE_FRAME_ADVANCE,
+    PLAY_MODE_ENDING_LEVEL
 };
 
 enum WarpTypes {
@@ -181,5 +188,6 @@ s32 lvl_init_from_save_file(      UNUSED s16 initOrUpdate,        s32 levelNum);
 s32 lvl_set_current_level(        UNUSED s16 initOrUpdate,        s32 levelNum);
 s32 lvl_play_the_end_screen_sound(UNUSED s16 initOrUpdate, UNUSED s32 levelNum);
 void basic_update(void);
+void set_play_mode(s16 playMode);
 
 #endif // LEVEL_UPDATE_H

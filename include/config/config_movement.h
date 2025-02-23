@@ -36,7 +36,7 @@
 /**
  * Prevents Mario from falling asleep while idle.
  */
-// #define NO_SLEEP
+ #define NO_SLEEP
 
 /**
  * Disables fall damage.
@@ -46,7 +46,7 @@
 /**
  * Disables the scream that mario makes when falling off a great height (this is separate from actual fall damage).
  */
-// #define NO_FALL_DAMAGE_SOUND
+#define NO_FALL_DAMAGE_SOUND
 
 /**
  * Fall height for normal fall damage. Vanilla is 1150.0f.
@@ -61,7 +61,7 @@
 /**
  * Disables Mario getting stuck in snow and sand when falling.
  */
-// #define NO_GETTING_BURIED
+#define NO_GETTING_BURIED
 
 /**
  * Prevents hands-free holding.

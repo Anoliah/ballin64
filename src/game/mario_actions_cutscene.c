@@ -548,6 +548,24 @@ s32 act_debug_free_move(struct MarioState *m) {
             return set_mario_action(m, ACT_FREEFALL, 0);
         }
     }
+    //CUSTOM
+    //Print some debug info to the console
+    if(gPlayer1Controller->buttonPressed & Z_TRIG) {
+        //SLOPES
+        /* s16 slopeAngle = abss(0x4000 - atan2s(sqrtf(sqr(m->floor->normal.x) + sqr(m->floor->normal.z)), m->floor->normal.y));
+        append_puppyprint_log("Floor normals: %f, %f, %f", m->floor->normal.x, m->floor->normal.y, m->floor->normal.z);
+        append_puppyprint_log("Slope angle based on normals: %d", slopeAngle);
+        append_puppyprint_log("Angle Cos: %f", absf(coss(slopeAngle)));
+        append_puppyprint_log("Angle Sin: %f", sins(slopeAngle));
+        s16 floorYaw = atan2s(m->floor->normal.z, m->floor->normal.x);
+        append_puppyprint_log("Floor Yaw: %x", floorYaw); */
+        //MARIO POS
+        /*
+        append_puppyprint_log("Mario Object Pos: %.3f, %.3f, %.3f", gMarioObject->oPosX, gMarioObject->oPosY, gMarioObject->oPosZ);
+        append_puppyprint_log("Mario Graphics Pos: %.3f, %.3f, %.3f", gMarioObject->header.gfx.pos[0], gMarioObject->header.gfx.pos[1], gMarioObject->header.gfx.pos[2]);
+        append_puppyprint_log("Mario State Pos: %.3f, %.3f, %.3f", gMarioState->pos[0], gMarioState->pos[1], gMarioState->pos[2]);*/
+
+    }
 
     if (m->intendedMag > 0) {
         speed *= m->intendedMag * 2.0f;

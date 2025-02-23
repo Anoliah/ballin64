@@ -48,13 +48,13 @@ s32 check_common_idle_cancels(struct MarioState *m) {
         return set_mario_action(m, ACT_WALKING, 0);
     }
 
-    if (m->input & INPUT_B_PRESSED) {
+    /* if (m->input & INPUT_B_PRESSED) {
         return set_mario_action(m, ACT_PUNCHING, 0);
-    }
+    } */
 
-    if (m->input & INPUT_Z_DOWN) {
+    /* if (m->input & INPUT_Z_DOWN) {
         return set_mario_action(m, ACT_START_CROUCHING, 0);
-    }
+    } */
 
     return FALSE;
 }
@@ -473,9 +473,9 @@ s32 act_standing_against_wall(struct MarioState *m) {
         return set_mario_action(m, ACT_FIRST_PERSON, 0);
     }
 
-    if (m->input & INPUT_B_PRESSED) {
+    /* if (m->input & INPUT_B_PRESSED) {
         return set_mario_action(m, ACT_PUNCHING, 0);
-    }
+    } */
 
     set_mario_animation(m, MARIO_ANIM_STAND_AGAINST_WALL);
     stationary_ground_step(m);
@@ -526,13 +526,13 @@ s32 act_crouching(struct MarioState *m) {
         return set_mario_action(m, ACT_STOP_CROUCHING, 0);
     }
 
-    if (m->input & INPUT_NONZERO_ANALOG) {
+    /* if (m->input & INPUT_NONZERO_ANALOG) {
         return set_mario_action(m, ACT_START_CRAWLING, 0);
-    }
+    } */
 
-    if (m->input & INPUT_B_PRESSED) {
+    /* if (m->input & INPUT_B_PRESSED) {
         return set_mario_action(m, ACT_PUNCHING, 9);
-    }
+    } */
 
     stationary_ground_step(m);
     set_mario_animation(m, MARIO_ANIM_CROUCHING);
@@ -602,9 +602,9 @@ s32 act_braking_stop(struct MarioState *m) {
         return set_mario_action(m, ACT_FREEFALL, 0);
     }
 
-    if (m->input & INPUT_B_PRESSED) {
+    /* if (m->input & INPUT_B_PRESSED) {
         return set_mario_action(m, ACT_PUNCHING, 0);
-    }
+    } */
 
     if (!(m->input & INPUT_FIRST_PERSON)
         && m->input & (INPUT_NONZERO_ANALOG | INPUT_A_PRESSED | INPUT_OFF_FLOOR | INPUT_ABOVE_SLIDE)) {
@@ -826,13 +826,17 @@ s32 check_common_landing_cancels(struct MarioState *m, u32 action) {
         }
     }
 
+    if(absf(m->forwardVel) > 7.0f) {
+        return set_mario_action(m, ACT_WALKING, 0);
+    }
+
     if (m->input & (INPUT_NONZERO_ANALOG | INPUT_A_PRESSED | INPUT_OFF_FLOOR | INPUT_ABOVE_SLIDE)) {
         return check_common_action_exits(m);
     }
 
-    if (m->input & INPUT_B_PRESSED) {
+    /* if (m->input & INPUT_B_PRESSED) {
         return set_mario_action(m, ACT_PUNCHING, 0);
-    }
+    } */
 
     return FALSE;
 }
@@ -1057,6 +1061,17 @@ s32 act_first_person(struct MarioState *m) {
     return FALSE;
 }
 
+s32 act_oil_slip(struct MarioState *m) {
+    if(m->floor->type != SURFACE_OIL) {
+        return set_mario_action(m, ACT_IDLE, 0);
+    }
+    m->forwardVel = 32.0f;
+    m->pos[0] += sins(m->faceAngle[1]) * m->forwardVel;
+    m->pos[2] += coss(m->faceAngle[1]) * m->forwardVel;
+    m->pos[1] = m->floorHeight;
+    return FALSE;
+}
+
 s32 check_common_stationary_cancels(struct MarioState *m) {
     if (m->pos[1] < m->waterLevel - 100) {
         if (m->action == ACT_SPAWN_SPIN_LANDING) {
@@ -1129,6 +1144,8 @@ s32 mario_execute_stationary_action(struct MarioState *m) {
         case ACT_BRAKING_STOP:            cancel = act_braking_stop(m);                     break;
         case ACT_BUTT_SLIDE_STOP:         cancel = act_butt_slide_stop(m);                  break;
         case ACT_HOLD_BUTT_SLIDE_STOP:    cancel = act_hold_butt_slide_stop(m);             break;
+        case ACT_OIL_SLIP:                cancel = act_oil_slip(m);                         break;
+        case ACT_EXPLODING:               cancel = FALSE;                                   break;
         default:                          cancel = TRUE;                                    break;
     }
     /* clang-format on */

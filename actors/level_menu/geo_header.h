@@ -1,0 +1,13 @@
+extern const GeoLayout level_menu_geo[];
+extern Lights1 level_menu_f3dlite_material_lights;
+extern Lights1 level_menu_f3dlite_material_001_lights;
+extern u8 level_menu_Shadow_ia8[];
+extern Vtx level_menu_Circle_mesh_layer_1_vtx_0[40];
+extern Gfx level_menu_Circle_mesh_layer_1_tri_0[];
+extern Vtx level_menu_Circle_mesh_layer_5_vtx_0[8];
+extern Gfx level_menu_Circle_mesh_layer_5_tri_0[];
+extern Gfx mat_level_menu_f3dlite_material[];
+extern Gfx mat_level_menu_f3dlite_material_001[];
+extern Gfx mat_revert_level_menu_f3dlite_material_001[];
+extern Gfx level_menu_Circle_mesh_layer_1[];
+extern Gfx level_menu_Circle_mesh_layer_5[];

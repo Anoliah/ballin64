@@ -309,6 +309,10 @@ extern const BehaviorScript bhvLaunchStarCollectWarp[];
 extern const BehaviorScript bhvLaunchDeathWarp[];
 extern const BehaviorScript bhvSwimmingWarp[];
 extern const BehaviorScript bhvRandomAnimatedTexture[];
+//CUSTOM LEVEL SELECT
+extern const BehaviorScript bhvLevelSelector[];
+extern const BehaviorScript bhvSlideSelectorModel[];
+
 extern const BehaviorScript bhvYellowBackgroundInMenu[];
 extern const BehaviorScript bhvMenuButton[];
 extern const BehaviorScript bhvMenuButtonManager[];
@@ -540,5 +544,19 @@ extern const BehaviorScript bhvEndBirds1[];
 extern const BehaviorScript bhvEndBirds2[];
 extern const BehaviorScript bhvIntroScene[];
 extern const BehaviorScript bhvUnusedFakeStar[];
+
+//CUSTOM
+extern const BehaviorScript bhvBallin[];
+extern const BehaviorScript bhvBallinStartup[];
+extern const BehaviorScript bhvBallinMenu[];
+extern const BehaviorScript bhvGoldRing[];
+extern const BehaviorScript bhvGoldRingTutorial[];
+extern const BehaviorScript bhvRedRing[];
+extern const BehaviorScript bhvFireBar[];
+extern const BehaviorScript bhvFireBarFire[];
+extern const BehaviorScript bhvTutorialExclamation[];
+extern const BehaviorScript bhvTutorialBase[];
+extern const BehaviorScript bhvMiniLogo[];
+extern const BehaviorScript bhvBumper[];
 
 #endif // BEHAVIOR_DATA_H

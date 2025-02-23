@@ -11,6 +11,7 @@
 #include "game/object_helpers.h"
 #include "game/debug.h"
 #include "menu/file_select.h"
+#include "menu/lvl_select.h"
 #include "engine/surface_load.h"
 
 #include "actors/common0.h"
@@ -3563,6 +3564,27 @@ const BehaviorScript bhvRandomAnimatedTexture[] = {
     END_LOOP(),
 };
 
+//CUSTOM LEVEL SELECT
+const BehaviorScript bhvLevelSelector[] = {
+    BEGIN(OBJ_LIST_LEVEL),
+    OR_INT(oFlags, (OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)),
+    CALL_NATIVE(beh_level_selector_init),
+    BEGIN_LOOP(),
+        SET_INT(oIntangibleTimer, 0),
+        CALL_NATIVE(beh_level_selector_loop),
+    END_LOOP(),
+};
+
+
+const BehaviorScript bhvSlideSelectorModel[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    OR_INT(oFlags, OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE),
+    SET_HOME(),
+    BEGIN_LOOP(),
+        CALL_NATIVE(bhv_slide_selector_model_loop),
+    END_LOOP(),
+};
+
 const BehaviorScript bhvYellowBackgroundInMenu[] = {
     BEGIN(OBJ_LIST_LEVEL),
     OR_INT(oFlags, (OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)),
@@ -5601,7 +5623,8 @@ const BehaviorScript bhvActivatedBackAndForthPlatform[] = {
 
 const BehaviorScript bhvRecoveryHeart[] = {
     BEGIN(OBJ_LIST_LEVEL),
-    OR_INT(oFlags, (OBJ_FLAG_COMPUTE_ANGLE_TO_MARIO | OBJ_FLAG_COMPUTE_DIST_TO_MARIO | OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)),
+    OR_INT(oFlags, (OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)),
+    SCALE(/*Unused*/ 0, /*Field*/ 300),
     CALL_NATIVE(bhv_init_room),
     BEGIN_LOOP(),
         CALL_NATIVE(bhv_recovery_heart_loop),
@@ -6079,4 +6102,117 @@ const BehaviorScript bhvIntroScene[] = {
     END_LOOP(),
 };
 
+//CUSTOM
+const BehaviorScript bhvBallin[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    OR_INT(oFlags, (OBJ_FLAG_SET_FACE_ANGLE_TO_MOVE_ANGLE | OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)),
+    BEGIN_LOOP(),
+        CALL_NATIVE(bhv_ballin_loop),
+    END_LOOP(),
+};
 
+const BehaviorScript bhvBallinStartup[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    OR_INT(oFlags, (OBJ_FLAG_SET_FACE_ANGLE_TO_MOVE_ANGLE | OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)),
+    CALL_NATIVE(bhv_ballin_startup_init),
+    BEGIN_LOOP(),
+        CALL_NATIVE(bhv_ballin_startup_loop),
+    END_LOOP(),
+};
+
+const BehaviorScript bhvBallinMenu[] = {
+    BEGIN(OBJ_LIST_DEFAULT),
+    OR_INT(oFlags, (OBJ_FLAG_SET_FACE_ANGLE_TO_MOVE_ANGLE | OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)),
+    CALL_NATIVE(bhv_ballin_menu_init),
+    BEGIN_LOOP(),
+        CALL_NATIVE(bhv_ballin_menu_loop),
+    END_LOOP(),
+};
+
+const BehaviorScript bhvGoldRing[] = {
+    BEGIN(OBJ_LIST_LEVEL),
+    OR_INT(oFlags, OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE),
+    SET_INT(oIntangibleTimer, 0),
+    CALL_NATIVE(bhv_gold_ring_init),
+    BEGIN_LOOP(),
+        SET_INT(oIntangibleTimer, 0),
+        CALL_NATIVE(bhv_gold_ring_loop),
+    END_LOOP(),
+};
+
+const BehaviorScript bhvGoldRingTutorial[] = {
+    BEGIN(OBJ_LIST_LEVEL),
+    OR_INT(oFlags, OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE),
+    SET_INT(oIntangibleTimer, 0),
+    CALL_NATIVE(bhv_gold_ring_tutorial_init),
+    BEGIN_LOOP(),
+        SET_INT(oIntangibleTimer, 0),
+        CALL_NATIVE(bhv_gold_ring_tutorial_loop),
+    END_LOOP(),
+};
+
+const BehaviorScript bhvRedRing[] = {
+    BEGIN(OBJ_LIST_LEVEL),
+    OR_INT(oFlags, OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE),
+    SET_INT(oIntangibleTimer, 0),
+    CALL_NATIVE(bhv_red_ring_init),
+    BEGIN_LOOP(),
+        SET_INT(oIntangibleTimer, 0),
+        CALL_NATIVE(bhv_red_ring_loop),
+    END_LOOP(),
+};
+
+const BehaviorScript bhvFireBar[] = {
+    BEGIN(OBJ_LIST_LEVEL),
+    OR_INT(oFlags, (OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)),
+    CALL_NATIVE(bhv_fire_bar_init),
+    BEGIN_LOOP(),
+        CALL_NATIVE(bhv_fire_bar_loop),
+    END_LOOP(),
+};
+
+const BehaviorScript bhvFireBarFire[] = {
+    BEGIN(OBJ_LIST_LEVEL),
+    BILLBOARD(),
+    OR_INT(oFlags, (OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)),
+    CALL_NATIVE(bhv_fire_bar_fire_init),
+    BEGIN_LOOP(),
+        CALL_NATIVE(bhv_fire_bar_fire_loop),
+    END_LOOP(),
+};
+
+const BehaviorScript bhvTutorialExclamation[] = {
+    BEGIN(OBJ_LIST_LEVEL),
+    OR_INT(oFlags, (OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)),
+    BEGIN_LOOP(),
+        CALL_NATIVE(bhv_tutorial_exclamation_loop),
+    END_LOOP(),
+};
+
+const BehaviorScript bhvTutorialBase[] = {
+    BEGIN(OBJ_LIST_LEVEL),
+    OR_INT(oFlags, (OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)),
+    SCALE(/*Unused*/ 0, /*Field*/ 350),
+    SET_INTERACT_TYPE(INTERACT_TEXT),
+    CALL_NATIVE(bhv_tutorial_base_init),
+    BEGIN_LOOP(),
+        CALL_NATIVE(bhv_tutorial_base_loop),
+    END_LOOP(),
+};
+
+const BehaviorScript bhvMiniLogo[] = {
+    BEGIN(OBJ_LIST_LEVEL),
+    OR_INT(oFlags, (OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)),
+    BEGIN_LOOP(),
+    END_LOOP(),
+};
+
+const BehaviorScript bhvBumper[] = {
+    BEGIN(OBJ_LIST_LEVEL),
+    OR_INT(oFlags, (OBJ_FLAG_UPDATE_GFX_POS_AND_ANGLE)),
+    SET_INTERACT_TYPE(INTERACT_NONE),
+    CALL_NATIVE(bhv_bumper_init),
+    BEGIN_LOOP(),
+        CALL_NATIVE(bhv_bumper_loop),
+    END_LOOP(),
+};

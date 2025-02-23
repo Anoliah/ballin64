@@ -1,0 +1,13 @@
+extern const GeoLayout mini_tutorial_geo[];
+extern Lights1 mini_tutorial_Cover_lights;
+extern Lights1 mini_tutorial_Page_lights;
+extern u8 mini_tutorial_tutbook_ci8[];
+extern u8 mini_tutorial_tutbook_pal_rgba16[];
+extern Vtx mini_tutorial_Cube_mesh_layer_1_vtx_0[52];
+extern Gfx mini_tutorial_Cube_mesh_layer_1_tri_0[];
+extern Vtx mini_tutorial_Cube_mesh_layer_1_vtx_1[20];
+extern Gfx mini_tutorial_Cube_mesh_layer_1_tri_1[];
+extern Gfx mat_mini_tutorial_Cover[];
+extern Gfx mat_revert_mini_tutorial_Cover[];
+extern Gfx mat_mini_tutorial_Page[];
+extern Gfx mini_tutorial_Cube_mesh_layer_1[];

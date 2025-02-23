@@ -551,6 +551,28 @@ void bhv_dust_smoke_loop(void);
 void bhv_yoshi_loop(void);
 void bhv_volcano_trap_loop(void);
 
+//CUSTOM
+void bhv_ballin_loop(void);
+void bhv_ballin_startup_loop(void);
+void bhv_ballin_startup_init(void);
+void bhv_ballin_menu_loop(void);
+void bhv_ballin_menu_init(void);
+void bhv_gold_ring_init(void);
+void bhv_gold_ring_loop(void);
+void bhv_gold_ring_tutorial_init(void);
+void bhv_gold_ring_tutorial_loop(void);
+void bhv_red_ring_init(void);
+void bhv_red_ring_loop(void);
+void bhv_fire_bar_init(void);
+void bhv_fire_bar_loop(void);
+void bhv_fire_bar_fire_init(void);
+void bhv_fire_bar_fire_loop(void);
+void bhv_tutorial_base_init(void);
+void bhv_tutorial_base_loop(void);
+void bhv_tutorial_exclamation_loop(void);
+void bhv_bumper_init(void);
+void bhv_bumper_loop(void);
+
 Gfx *geo_move_mario_part_from_parent(s32 callContext, UNUSED struct GraphNode *node, Mat4 mtx);
 
 // Bowser

@@ -110,10 +110,9 @@ void mario_bonk_reflection(struct MarioState *m, u32 negateSpeed) {
         s16 wallAngle = m->wallYaw;
         m->faceAngle[1] = wallAngle - (s16)(m->faceAngle[1] - wallAngle);
 
-        play_sound((m->flags & MARIO_METAL_CAP) ? SOUND_ACTION_METAL_BONK : SOUND_ACTION_BONK,
-                   m->marioObj->header.gfx.cameraToObject);
+        play_sound(SOUND_ACTION_BALLIN_BOUNCE, m->marioObj->header.gfx.cameraToObject);
     } else {
-        play_sound(SOUND_ACTION_HIT, m->marioObj->header.gfx.cameraToObject);
+        play_sound(SOUND_ACTION_BALLIN_BOUNCE, m->marioObj->header.gfx.cameraToObject);
     }
 
     if (negateSpeed) {
@@ -281,8 +280,8 @@ static s32 perform_ground_quarter_step(struct MarioState *m, Vec3f nextPos) {
     s16 wallDYaw;
     s32 oldWallDYaw;
 
-    resolve_and_return_wall_collisions(nextPos, 30.0f, 24.0f, &lowerWall);
-    resolve_and_return_wall_collisions(nextPos, 60.0f, 50.0f, &upperWall);
+    resolve_and_return_wall_collisions(nextPos, 30.0f, 48.0f, &lowerWall);
+    resolve_and_return_wall_collisions(nextPos, 60.0f, 100.0f, &upperWall);
 
     f32 floorHeight = find_floor(nextPos[0], nextPos[1], nextPos[2], &floor);
     f32 ceilHeight = find_mario_ceil(nextPos, floorHeight, &ceil);
@@ -303,7 +302,7 @@ static s32 perform_ground_quarter_step(struct MarioState *m, Vec3f nextPos) {
         if (nextPos[1] + 160.0f >= ceilHeight) {
             return GROUND_STEP_HIT_WALL_STOP_QSTEPS;
         }
-
+        vec3f_copy(m->prevPos, m->pos);
         vec3f_copy(m->pos, nextPos);
         set_mario_floor(m, floor, floorHeight);
         return GROUND_STEP_LEFT_GROUND;
@@ -348,11 +347,11 @@ s32 perform_ground_step(struct MarioState *m) {
     s32 i;
     u32 stepResult;
     Vec3f intendedPos;
-    const f32 numSteps = 4.0f;
+    const f32 numSteps = 8.0f;
 
     set_mario_wall(m, NULL);
 
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < 8; i++) {
         intendedPos[0] = m->pos[0] + m->floor->normal.y * (m->vel[0] / numSteps);
         intendedPos[2] = m->pos[2] + m->floor->normal.y * (m->vel[2] / numSteps);
         intendedPos[1] = m->pos[1];
@@ -465,8 +464,8 @@ s32 perform_air_quarter_step(struct MarioState *m, Vec3f intendedPos, u32 stepAr
 
     vec3f_copy(nextPos, intendedPos);
 
-    resolve_and_return_wall_collisions(nextPos, 150.0f, 50.0f, &upperWall);
-    resolve_and_return_wall_collisions(nextPos, 30.0f, 50.0f, &lowerWall);
+    resolve_and_return_wall_collisions(nextPos, 150.0f, 100.0f, &upperWall);
+    resolve_and_return_wall_collisions(nextPos, 30.0f, 100.0f, &lowerWall);
 
     f32 floorHeight = find_floor(nextPos[0], nextPos[1], nextPos[2], &floor);
     f32 ceilHeight = find_mario_ceil(nextPos, floorHeight, &ceil);
@@ -597,6 +596,10 @@ u32 should_strengthen_gravity_for_jump_ascent(struct MarioState *m) {
         return FALSE;
     }
 
+    if(m->action == ACT_BUTT_SLIDE_AIR){
+        return FALSE;
+    }
+
     if (m->action & (ACT_FLAG_INTANGIBLE | ACT_FLAG_INVULNERABLE)) {
         return FALSE;
     }
@@ -639,7 +642,7 @@ void apply_gravity(struct MarioState *m) {
         if (m->vel[1] < -16.0f) {
             m->vel[1] = -16.0f;
         }
-    } else if ((m->flags & MARIO_WING_CAP) && m->vel[1] < 0.0f && (m->input & INPUT_A_DOWN)) {
+    /* } else if (m->vel[1] < 0.0f && (m->input & INPUT_A_DOWN)) {
         m->marioBodyState->wingFlutter = TRUE;
 
         m->vel[1] -= 2.0f;
@@ -647,7 +650,7 @@ void apply_gravity(struct MarioState *m) {
             if ((m->vel[1] += 4.0f) > -37.5f) {
                 m->vel[1] = -37.5f;
             }
-        }
+        } */
     } else {
         m->vel[1] -= 4.0f;
         if (m->vel[1] < -75.0f) {
@@ -680,14 +683,14 @@ void apply_vertical_wind(struct MarioState *m) {
 
 s32 perform_air_step(struct MarioState *m, u32 stepArg) {
     Vec3f intendedPos;
-    const f32 numSteps = 4.0f;
+    const f32 numSteps = 8.0f;
     s32 i;
     s32 quarterStepResult;
     s32 stepResult = AIR_STEP_NONE;
 
     set_mario_wall(m, NULL);
 
-    for (i = 0; i < 4; i++) {
+    for (i = 0; i < 8; i++) {
         intendedPos[0] = m->pos[0] + m->vel[0] / numSteps;
         intendedPos[1] = m->pos[1] + m->vel[1] / numSteps;
         intendedPos[2] = m->pos[2] + m->vel[2] / numSteps;

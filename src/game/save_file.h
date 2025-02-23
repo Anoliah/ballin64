@@ -17,7 +17,8 @@
     #define EEPROM_SIZE 0x200
 #endif
 
-#define NUM_SAVE_FILES 4
+//CUSTOM REMOVE EXTRA FILES
+#define NUM_SAVE_FILES 1
 
 struct SaveBlockSignature {
     u16 magic;
@@ -28,11 +29,13 @@ struct SaveFile {
     // Location of lost cap.
     // Note: the coordinates get set, but are never actually used, since the
     // cap can always be found in a fixed spot within the course
-    u8 capLevel;
-    u8 capArea;
+    //REMOVE CAP
+    //u8 capLevel;
+    //u8 capArea;
     // Note: the coordinates get set, but are never actually used, since the
     // cap can always be found in a fixed spot within the course
-    Vec3s capPos; // 48 bits
+    //REMOVE CAP POS
+    //Vec3s capPos; // 48 bits
 
     u32 flags;
 
@@ -41,7 +44,14 @@ struct SaveFile {
     // cannon is open.
     u8 courseStars[COURSE_COUNT]; // 200 bits
 
-    u8 courseCoinScores[COURSE_STAGES_COUNT]; // 120 bits
+    //CUSTOM
+    u16 courseTimeScores[COURSE_COUNT]; // 400 bits!
+    u8 courseRanks[COURSE_COUNT]; //200 Bits
+
+    //REMOVING COIN SCORE
+    //u8 courseCoinScores[COURSE_STAGES_COUNT]; // 120 bits
+
+    
 
     struct SaveBlockSignature signature; // 32 bits
 };
@@ -57,7 +67,8 @@ struct MainMenuSaveData {
     // Each save file has a 2 bit "age" for each course. The higher this value,
     // the older the high score is. This is used for tie-breaking when displaying
     // on the high score screen.
-    u32 coinScoreAges[NUM_SAVE_FILES];
+    //REMOVE COIN SCORES
+    //u32 coinScoreAges[NUM_SAVE_FILES];
     u8 soundMode: 2;
 #ifdef WIDE
     u8 wideMode: 1;
@@ -79,7 +90,9 @@ struct MainMenuSaveData {
 
 struct SaveBuffer {
     // Each of the four save files has two copies. If one is bad, the other is used as a backup.
-    struct SaveFile files[NUM_SAVE_FILES][2];
+    //struct SaveFile files[NUM_SAVE_FILES][2];
+    //REMOVE BACKUP
+    struct SaveFile files[NUM_SAVE_FILES][1];
     // Main menu data, storing config options.
     struct MainMenuSaveData menuData;
 };
@@ -98,6 +111,7 @@ extern s8 sUnusedGotGlobalCoinHiScore;
 extern u8 gGotFileCoinHiScore;
 extern u8 gCurrCourseStarFlags;
 extern u8 gSpecialTripleJump;
+extern u8 gLastSelectedSlideIndex;
 extern s8 gLevelToCourseNumTable[];
 
 enum CourseFlags {
@@ -209,5 +223,23 @@ u32 eu_get_language(void);
 #else
 #define LANGUAGE_ENGLISH 0
 #endif
+
+//CUSTOM
+enum SlideRank {
+    RANK_NONE = 0,
+    RANK_S,
+    RANK_A,
+    RANK_B,
+    RANK_C,
+    RANK_F
+};
+
+void save_file_give_star(s16 starIndex);
+void save_file_set_time(u16 time);
+void save_file_set_rank(u8 rank);
+u16 save_file_get_time();
+u16 save_file_get_time_from_index(s32 courseIndex);
+u16 save_file_get_rank_from_index(s32 courseIndex);
+
 
 #endif // SAVE_FILE_H

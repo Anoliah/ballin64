@@ -377,10 +377,14 @@ void mario_set_forward_vel(struct MarioState *m, f32 forwardVel) {
 /**
  * Returns the slipperiness class of Mario's floor.
  */
-s32 mario_get_floor_class(struct MarioState *m) {
+s32 mario_get_floor_class(UNUSED struct MarioState *m) {
     s32 floorClass;
 
-    // The slide terrain type defaults to slide slipperiness.
+    //CUSTOM, EVERYTHING SLIPPY
+    floorClass = SURFACE_CLASS_VERY_SLIPPERY;
+    return floorClass;
+
+    /* // The slide terrain type defaults to slide slipperiness.
     // This doesn't matter too much since normally the slide terrain
     // is checked for anyways.
     if ((m->area->terrainType & TERRAIN_MASK) == TERRAIN_SLIDE) {
@@ -422,7 +426,7 @@ s32 mario_get_floor_class(struct MarioState *m) {
         floorClass = SURFACE_CLASS_NOT_SLIPPERY;
     }
 
-    return floorClass;
+    return floorClass; */
 }
 
 // clang-format off
@@ -742,7 +746,7 @@ void set_mario_y_vel_based_on_fspeed(struct MarioState *m, f32 initialVelY, f32 
  * Transitions for a variety of airborne actions.
  */
 u32 set_mario_action_airborne(struct MarioState *m, u32 action, u32 actionArg) {
-    f32 forwardVel;
+    //f32 forwardVel;
 
     if ((m->squishTimer != 0 || m->quicksandDepth >= 1.0f)
         && (action == ACT_DOUBLE_JUMP || action == ACT_TWIRLING)) {
@@ -750,40 +754,9 @@ u32 set_mario_action_airborne(struct MarioState *m, u32 action, u32 actionArg) {
     }
 
     switch (action) {
-        case ACT_DOUBLE_JUMP:
-            set_mario_y_vel_based_on_fspeed(m, 52.0f, 0.25f);
-            m->forwardVel *= 0.8f;
-            break;
-
-        case ACT_BACKFLIP:
-            m->marioObj->header.gfx.animInfo.animID = -1;
-            m->forwardVel = -16.0f;
-            set_mario_y_vel_based_on_fspeed(m, 62.0f, 0.0f);
-            break;
-
-        case ACT_TRIPLE_JUMP:
-            set_mario_y_vel_based_on_fspeed(m, 69.0f, 0.0f);
-            m->forwardVel *= 0.8f;
-            break;
-
-        case ACT_FLYING_TRIPLE_JUMP:
-            set_mario_y_vel_based_on_fspeed(m, 82.0f, 0.0f);
-            break;
-
-        case ACT_WATER_JUMP:
-        case ACT_HOLD_WATER_JUMP:
-            if (actionArg == 0) {
-                set_mario_y_vel_based_on_fspeed(m, 42.0f, 0.0f);
-            }
-            break;
-
         case ACT_BURNING_JUMP:
             m->vel[1] = 31.5f;
             m->forwardVel = 8.0f;
-            break;
-
-        case ACT_RIDING_SHELL_JUMP:
-            set_mario_y_vel_based_on_fspeed(m, 42.0f, 0.25f);
             break;
 
         case ACT_JUMP:
@@ -792,7 +765,11 @@ u32 set_mario_action_airborne(struct MarioState *m, u32 action, u32 actionArg) {
             set_mario_y_vel_based_on_fspeed(m, 42.0f, 0.25f);
             m->forwardVel *= 0.8f;
             break;
-
+        case ACT_DOUBLE_JUMP:
+            ball_bounce_off_floor(m);
+            set_mario_y_vel_based_on_fspeed(m, 62.0f, 0.25f);
+            m->particleFlags |= PARTICLE_HORIZONTAL_STAR;
+            break;
         case ACT_WALL_KICK_AIR:
         case ACT_TOP_OF_POLE_JUMP:
             set_mario_y_vel_based_on_fspeed(m, 62.0f, 0.0f);
@@ -802,53 +779,11 @@ u32 set_mario_action_airborne(struct MarioState *m, u32 action, u32 actionArg) {
             m->wallKickTimer = 0;
             break;
 
-        case ACT_SIDE_FLIP:
-            set_mario_y_vel_based_on_fspeed(m, 62.0f, 0.0f);
-            m->forwardVel = 8.0f;
-            m->faceAngle[1] = m->intendedYaw;
-            break;
-
-        case ACT_STEEP_JUMP:
-            m->marioObj->header.gfx.animInfo.animID = -1;
-            set_mario_y_vel_based_on_fspeed(m, 42.0f, 0.25f);
-            m->faceAngle[0] = -0x2000;
-            break;
-
         case ACT_LAVA_BOOST:
             m->vel[1] = 84.0f;
             if (actionArg == 0) {
                 m->forwardVel = 0.0f;
             }
-            break;
-
-        case ACT_DIVE:
-            if ((forwardVel = m->forwardVel + 15.0f) > 48.0f) {
-                forwardVel = 48.0f;
-            }
-            mario_set_forward_vel(m, forwardVel);
-            break;
-
-        case ACT_LONG_JUMP:
-            m->marioObj->header.gfx.animInfo.animID = -1;
-            set_mario_y_vel_based_on_fspeed(m, 30.0f, 0.0f);
-            m->marioObj->oMarioLongJumpIsSlow = m->forwardVel > 16.0f ? FALSE : TRUE;
-
-            //! (BLJ's) This properly handles long jumps from getting forward speed with
-            //  too much velocity, but misses backwards longs allowing high negative speeds.
-            if ((m->forwardVel *= 1.5f) > 48.0f) {
-                m->forwardVel = 48.0f;
-            }
-            break;
-
-        case ACT_SLIDE_KICK:
-            m->vel[1] = 12.0f;
-            if (m->forwardVel < 32.0f) {
-                m->forwardVel = 32.0f;
-            }
-            break;
-
-        case ACT_JUMP_KICK:
-            m->vel[1] = 20.0f;
             break;
     }
 
@@ -884,19 +819,11 @@ u32 set_mario_action_moving(struct MarioState *m, u32 action, UNUSED u32 actionA
             break;
 
         case ACT_BEGIN_SLIDING:
-            if (mario_facing_downhill(m, FALSE)) {
                 action = ACT_BUTT_SLIDE;
-            } else {
-                action = ACT_STOMACH_SLIDE;
-            }
             break;
 
         case ACT_HOLD_BEGIN_SLIDING:
-            if (mario_facing_downhill(m, FALSE)) {
                 action = ACT_HOLD_BUTT_SLIDE;
-            } else {
-                action = ACT_HOLD_STOMACH_SLIDE;
-            }
             break;
     }
 
@@ -996,22 +923,6 @@ s32 set_jump_from_landing(struct MarioState *m) {
                     set_mario_action(m, ACT_DOUBLE_JUMP, 0);
                     break;
 
-                case ACT_SIDE_FLIP_LAND_STOP:
-                    set_mario_action(m, ACT_DOUBLE_JUMP, 0);
-                    break;
-
-                case ACT_DOUBLE_JUMP_LAND:
-                    // If Mario has a wing cap, he ignores the typical speed
-                    // requirement for a triple jump.
-                    if (m->flags & MARIO_WING_CAP) {
-                        set_mario_action(m, ACT_FLYING_TRIPLE_JUMP, 0);
-                    } else if (m->forwardVel > 20.0f) {
-                        set_mario_action(m, ACT_TRIPLE_JUMP, 0);
-                    } else {
-                        set_mario_action(m, ACT_JUMP, 0);
-                    }
-                    break;
-
                 default:
                     set_mario_action(m, ACT_JUMP, 0);
                     break;
@@ -1019,7 +930,7 @@ s32 set_jump_from_landing(struct MarioState *m) {
         }
     }
 
-    m->doubleJumpTimer = 0;
+    //m->doubleJumpTimer = 0;
 
     return TRUE;
 }
@@ -1030,12 +941,7 @@ s32 set_jump_from_landing(struct MarioState *m) {
  */
 s32 set_jumping_action(struct MarioState *m, u32 action, u32 actionArg) {
     if (m->quicksandDepth >= 11.0f) {
-        // Checks whether Mario is holding an object or not.
-        if (m->heldObj == NULL) {
-            return set_mario_action(m, ACT_QUICKSAND_JUMP_LAND, 0);
-        } else {
-            return set_mario_action(m, ACT_HOLD_QUICKSAND_JUMP_LAND, 0);
-        }
+        return set_mario_action(m, ACT_QUICKSAND_JUMP_LAND, 0);
     }
 
     if (mario_floor_is_steep(m)) {
@@ -1655,7 +1561,9 @@ void mario_update_hitbox_and_cap_model(struct MarioState *m) {
     if (m->action & ACT_FLAG_SHORT_HITBOX) {
         m->marioObj->hitboxHeight = 100.0f;
     } else {
-        m->marioObj->hitboxHeight = 160.0f;
+        m->marioObj->hitboxHeight = 200.0f;
+        m->marioObj->hitboxRadius = 100.0f;
+        m->marioObj->hurtboxRadius = 100.0f;
     }
 
     if ((m->flags & MARIO_TELEPORTING) && (m->fadeWarpOpacity != MODEL_STATE_MASK)) {
@@ -1806,13 +1714,16 @@ void init_mario(void) {
 
     gMarioState->invincTimer = 0;
 
-    if (save_file_get_flags()
+    //REMOVE CAP POS
+    /* if (save_file_get_flags()
         & (SAVE_FLAG_CAP_ON_GROUND | SAVE_FLAG_CAP_ON_KLEPTO | SAVE_FLAG_CAP_ON_UKIKI
            | SAVE_FLAG_CAP_ON_MR_BLIZZARD)) {
         gMarioState->flags = 0;
     } else {
         gMarioState->flags = (MARIO_NORMAL_CAP | MARIO_CAP_ON_HEAD);
-    }
+    } */
+    
+    gMarioState->flags = (MARIO_NORMAL_CAP | MARIO_CAP_ON_HEAD);
 
     gMarioState->forwardVel = 0.0f;
     gMarioState->squishTimer = 0;
@@ -1867,6 +1778,8 @@ void init_mario(void) {
         capObject->oForwardVel = 0;
         capObject->oMoveAngleYaw = 0;
     }
+    
+    spawn_object(gMarioState->marioObj, MODEL_BALLIN, bhvBallin);
 }
 
 void init_mario_from_save_file(void) {

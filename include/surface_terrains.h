@@ -12,16 +12,16 @@ enum SurfaceTypes {
     SURFACE_NEW_WATER_BOTTOM,           // 0x0003 // Custom water surface bottom marker
     SURFACE_0004,                       // 0x0004 // Unused, has no function and has parameters
     SURFACE_HANGABLE,                   // 0x0005 // Ceiling that Mario can climb on
-    SURFACE_0006,                       // 0x0006 // Unused
+    SURFACE_BOOST_PAD,                  // 0x0006 // CUSTOM Boost pad
     SURFACE_SUPER_SLIPPERY,             // 0x0007 // Super slippery surface, good for delimiting your level
-    SURFACE_0008,                       // 0x0008 // Unused
+    SURFACE_ROUGH,                      // 0x0008 // CUSTOM ROUGH
     SURFACE_SLOW,                       // 0x0009 // Slow down Mario, unused
     SURFACE_DEATH_PLANE,                // 0x000A // Death floor. Warps to ID of force parameter's second byte if set, otherwise warps to 0xF3 if it exists, otherwise defaults to ID 0xF1.
     SURFACE_CLOSE_CAMERA,               // 0x000B // Close camera
-    SURFACE_000C,                       // 0x000C // unused
+    SURFACE_INSTANT_DEATH,              // 0x000C // CUSTOM Instant Death
     SURFACE_WATER,                      // 0x000D // Water, has no action, used on some waterboxes below
     SURFACE_FLOWING_WATER,              // 0x000E // Water (flowing), has parameters
-    SURFACE_000F,                       // 0x000F // Unused
+    SURFACE_OIL,                        // 0x000F // CUSTOM Oil
     SURFACE_0010,                       // 0x0010 // Unused
     SURFACE_0011,                       // 0x0011 // Unused
     SURFACE_INTANGIBLE,                 // 0x0012 // Intangible (Separates BBH mansion from merry-go-round, for room usage)

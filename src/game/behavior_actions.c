@@ -232,3 +232,11 @@ void set_obj_anim_with_accel_and_sound(s16 frame1, s16 frame2, s32 sound) {
 #include "behaviors/strong_wind_particle.inc.c"
 #include "behaviors/sl_snowman_wind.inc.c"
 #include "behaviors/sl_walking_penguin.inc.c"
+
+//CUSTOM
+#include "behaviors/ballin.inc.c"
+#include "behaviors/gold_ring.inc.c"
+#include "behaviors/red_ring.inc.c"
+#include "behaviors/fire_bar.inc.c"
+#include "behaviors/tutorial.inc.c"
+#include "behaviors/bumper.inc.c"

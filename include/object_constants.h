@@ -1196,6 +1196,7 @@ enum oBehParams1stByteSlidingPlatform { // collisionDataIndex
     #define BBALL_BP_STYPE_BOB_LOWER                        0x2
     #define BBALL_BP_STYPE_THI_LARGE                        0x3
     #define BBALL_BP_STYPE_THI_SMALL                        0x4
+    #define BBALL_BP_STYPE_PINBALL                          0x5
 
 /* Bowling Ball (Free) */
     /* oAction */

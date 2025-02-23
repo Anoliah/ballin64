@@ -27,6 +27,8 @@
 #include "puppycam2.h"
 #include "main.h"
 
+#include "puppyprint.h"
+
 #ifdef VERSION_EU
 #undef LANGUAGE_FUNCTION
 #define LANGUAGE_FUNCTION gInGameLanguage
@@ -132,6 +134,22 @@ u8 gMenuHoldKeyIndex = 0;
 u8 gMenuHoldKeyTimer = 0;
 s32 gDialogResponse = DIALOG_RESPONSE_NONE;
 
+//CUSTOM
+u16 gDisplayTimeToBeat[3];
+u16 gDisplayYourTime[3];
+u16 gDisplayBestTime[3];
+
+u16 gRunningDisplayTimeToBeat[3];
+u16 gRunningDisplayYourTime[3];
+u16 gRunningDisplayBestTime[3];
+
+enum ResultsPhase gResultsPhase = PHASE_INIT;
+char sLetterGrade;
+enum SlideRank gRank;
+
+u16 gBestTime;
+
+u8 gIsBestSlideTime = FALSE;
 
 void create_dl_identity_matrix(void) {
     Mtx *matrix = (Mtx *) alloc_display_list(sizeof(Mtx));
@@ -1688,7 +1706,10 @@ void render_pause_camera_options(s16 x, s16 y, s8 *index, s16 xIndex) {
 void render_pause_course_options(s16 x, s16 y, s8 *index, s16 yIndex) {
     u8 textContinue[] = { TEXT_CONTINUE };
     u8 textExitCourse[] = { TEXT_EXIT_COURSE };
-    u8 textCameraAngleR[] = { TEXT_CAMERA_ANGLE_R };
+    //REMOVE SET CAMERA ANGLE
+    //u8 textCameraAngleR[] = { TEXT_CAMERA_ANGLE_R };
+    //CUSTOM
+    u8 textResetLevel[] = { TEXT_RESET_LEVEL };
 
     handle_menu_scrolling(MENU_SCROLL_VERTICAL, index, 1, 3);
 
@@ -1697,8 +1718,19 @@ void render_pause_course_options(s16 x, s16 y, s8 *index, s16 yIndex) {
 
     print_generic_string(x + 10, y - 2, LANGUAGE_ARRAY(textContinue));
     print_generic_string(x + 10, y - 17, LANGUAGE_ARRAY(textExitCourse));
+    //CUSTOM
+    print_generic_string(x + 10, y - 33, LANGUAGE_ARRAY(textResetLevel));
 
-    if (*index != MENU_OPT_CAMERA_ANGLE_R) {
+    gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
+
+    create_dl_translation_matrix(MENU_MTX_PUSH, x - X_VAL8, (y - ((*index - 1) * yIndex)) - Y_VAL8, 0);
+
+    gDPSetEnvColor(gDisplayListHead++, 255, 255, 255, gDialogTextAlpha);
+    gSPDisplayList(gDisplayListHead++, dl_draw_triangle);
+    gSPPopMatrix(gDisplayListHead++, G_MTX_MODELVIEW);
+
+    //REMOVE SET CAMERA ANGLE
+    /* if (*index != MENU_OPT_CAMERA_ANGLE_R) {
         print_generic_string(x + 10, y - 33, LANGUAGE_ARRAY(textCameraAngleR));
         gSPDisplayList(gDisplayListHead++, dl_ia_text_end);
 
@@ -1711,7 +1743,7 @@ void render_pause_course_options(s16 x, s16 y, s8 *index, s16 yIndex) {
 
     if (*index == MENU_OPT_CAMERA_ANGLE_R) {
         render_pause_camera_options(x - 42, y - 42, &gDialogCameraAngleIndex, 110);
-    }
+    } */
 }
 
 void render_pause_castle_menu_box(s16 x, s16 y) {
@@ -1901,10 +1933,9 @@ s32 render_pause_courses_and_castle(void) {
             render_pause_red_coins();
 #ifndef DISABLE_EXIT_COURSE
 #ifdef EXIT_COURSE_WHILE_MOVING
-            if ((gMarioStates[0].action & (ACT_FLAG_SWIMMING | ACT_FLAG_METAL_WATER | ACT_FLAG_PAUSE_EXIT))
-             || (gMarioStates[0].pos[1] <= gMarioStates[0].floorHeight)) {
+            if (1) {
 #else
-            if (gMarioStates[0].action & ACT_FLAG_PAUSE_EXIT) {
+            if (1) {
 #endif
                 render_pause_course_options(99, 93, &gDialogLineNum, 15);
             }
@@ -1918,7 +1949,10 @@ s32 render_pause_courses_and_castle(void) {
 
                 if (gDialogLineNum == MENU_OPT_EXIT_COURSE) {
                     index = gDialogLineNum;
-                } else { // MENU_OPT_CONTINUE or MENU_OPT_CAMERA_ANGLE_R
+                //CUSTOM
+                } else if (gDialogLineNum == MENU_OPT_3){
+                    index = gDialogLineNum;    
+                }else { // MENU_OPT_CONTINUE or MENU_OPT_CAMERA_ANGLE_R
                     index = MENU_OPT_DEFAULT;
                 }
 
@@ -2195,6 +2229,264 @@ s32 render_course_complete_screen(void) {
     return MENU_OPT_NONE;
 }
 
+//CUSTOM
+
+s16 setRunningDisplayTime(u16 *setTime, u16 *targetTime) {
+    s16 inc = 503; //Increment by uneven number so milisecond count looks more interesting
+    setTime[2] += inc;
+    //Count up to target minutes
+    if(setTime[0] == targetTime[0]){
+        //Count up to target seconds
+        if(setTime[1] == targetTime[1]){
+            //Count up to taret miliseconds
+            if(setTime[2] > targetTime[2]){
+                setTime[2] = targetTime[2];
+                return TRUE;
+            }
+        }else if(setTime[2] > 1000){
+            setTime[1]++;
+            setTime[2] = setTime[2] - 1000;
+        }
+    } else if((setTime[2] > 1000) && (setTime[1] > 60)) {
+        setTime[0]++;
+        setTime[1] = 0;
+        setTime[2] -= 1000;
+    } else if (setTime[2] > 1000) {
+        setTime[1]++;
+        setTime[2] -= 1000;
+    }
+
+    return FALSE;
+}
+
+enum SlideRank determineRank() {
+    u16 playerTime = gHudDisplay.timer;
+    u16 targetTime = gSlideTimeToBeat;
+    if (playerTime <= targetTime * 0.8){
+        return RANK_S;
+    } else if (playerTime <= targetTime) {
+        return RANK_A;
+    } else if (playerTime <= targetTime * 1.2) {
+        return RANK_B;
+    } else if (playerTime <= targetTime * 1.4) {
+        return RANK_C;
+    } else {
+        return RANK_F;
+    }
+}
+
+s32 render_results_screen(void) {
+    shade_screen();
+
+    char textBytes[64];
+    u16 targetTime;
+    enum SlideRank currRank;
+
+    prepare_blank_box();
+    render_blank_box_rounded(10, 10, 160, 100, 0, 0, 0, 175);
+    finish_blank_box();
+
+    switch(gResultsPhase){
+        //Calculate segmented times and initialize other variables
+        case PHASE_INIT:
+            gCourseDoneMenuTimer = 0;
+            gBestTime = save_file_get_time();
+            currRank = save_file_get_rank_from_index(COURSE_NUM_TO_INDEX(gCurrCourseNum));
+            if(currRank == RANK_A || currRank == RANK_S) {
+                targetTime = gSlideTimeToBeat * 0.8;
+            }
+            else {
+                targetTime = gSlideTimeToBeat;
+            }
+
+            //Calculate target time in m's"ms format
+            gDisplayTimeToBeat[0] = targetTime / 1800;
+            gDisplayTimeToBeat[1] = (targetTime - (gDisplayTimeToBeat[0] * 1800)) / 30;
+            gDisplayTimeToBeat[2] = (targetTime - (gDisplayTimeToBeat[0] * 1800) - (gDisplayTimeToBeat[1] * 30)) * 33;
+
+            //Calculate player's time in m's"ms format
+            gDisplayYourTime[0] = gHudDisplay.timer / 1800;
+            gDisplayYourTime[1] = (gHudDisplay.timer - (gDisplayYourTime[0] * 1800)) / 30;
+            gDisplayYourTime[2] = (gHudDisplay.timer - (gDisplayYourTime[0] * 1800) - (gDisplayYourTime[1] * 30)) * 33;
+
+            //Calculate best time in m's"ms format
+            gDisplayBestTime[0] = gBestTime / 1800;
+            gDisplayBestTime[1] = (gBestTime - (gDisplayBestTime[0] * 1800)) / 30;
+            gDisplayBestTime[2] = (gBestTime - (gDisplayBestTime[0] * 1800) - (gDisplayBestTime[1] * 30)) * 33;
+
+            //Set up the running displays that count up
+            gRunningDisplayTimeToBeat[0] = 0;
+            gRunningDisplayTimeToBeat[1] = 0;
+            gRunningDisplayTimeToBeat[2] = 0;
+
+            gRunningDisplayYourTime[0] = 0;
+            gRunningDisplayYourTime[1] = 0;
+            gRunningDisplayYourTime[2] = 0;
+
+            gRunningDisplayBestTime[0] = 0;
+            gRunningDisplayBestTime[1] = 0;
+            gRunningDisplayBestTime[2] = 0;
+
+            sLetterGrade = '-';
+            gIsBestSlideTime = FALSE;
+
+            play_music(SEQ_PLAYER_LEVEL, SEQUENCE_ARGS(4, SEQ_MENU_SMK), 0);
+            //Skip tally for tutorial, and set flag that tutorial is complete
+            if(gSlideTimeToBeat == 0xFFFF){
+                gResultsPhase = PHASE_END;
+                save_file_set_flags(SAVE_FLAG_FILE_EXISTS);
+            }else{
+                gResultsPhase = PHASE_COUNT_TARGET_TIME;
+            }
+            break;
+        //Count up target time
+        case PHASE_COUNT_TARGET_TIME:
+            if(setRunningDisplayTime(gRunningDisplayTimeToBeat, gDisplayTimeToBeat)){
+                //Wait 15 frames before proceding
+                if(++gCourseDoneMenuTimer > 15) {
+                    gResultsPhase = PHASE_COUNT_YOUR_TIME;
+                    gCourseDoneMenuTimer = 0;
+                }
+            } else{
+                //TODO: Replace with custom sound
+                play_sound(SOUND_GENERAL_COIN, gGlobalSoundSource);
+            }
+            break;
+        //Count up player's time
+        case PHASE_COUNT_YOUR_TIME:
+            if(setRunningDisplayTime(gRunningDisplayYourTime, gDisplayYourTime)){
+                //Wait 15 frames before proceding
+                if(++gCourseDoneMenuTimer > 15) {
+                    gResultsPhase = PHASE_COUNT_BEST_TIME;
+                    gCourseDoneMenuTimer = 0;
+                }
+            } else{
+                //TODO: Replace with custom sound
+                play_sound(SOUND_GENERAL_COIN, gGlobalSoundSource);
+            }
+            break;
+        //Count up best time
+        case PHASE_COUNT_BEST_TIME:
+            if(setRunningDisplayTime(gRunningDisplayBestTime, gDisplayBestTime)){
+                //Wait 15 frames before proceding
+                if(++gCourseDoneMenuTimer > 15) {
+                    gResultsPhase = PHASE_CALCULATE_RANK;
+                    gCourseDoneMenuTimer = 0;
+                }
+            } else{
+                //TODO: Replace with custom sound
+                play_sound(SOUND_GENERAL_COIN, gGlobalSoundSource);
+            }
+            break;
+        //Calculates the letter grade based on how far off the player was from the target time
+        //Also gives a star on 'S' and 'A' ranks
+        //Also also plays a sound effect based on the rank recieved
+        case PHASE_CALCULATE_RANK:
+            gRank = determineRank();
+            switch(gRank){
+            case RANK_S:
+                sLetterGrade = 'S';
+                save_file_give_star(1);
+                play_sound(SOUND_MARIO_HERE_WE_GO, gGlobalSoundSource);
+                break;
+            case RANK_A:
+                sLetterGrade = 'A';
+                save_file_give_star(1);
+                play_sound(SOUND_MARIO_OKEY_DOKEY, gGlobalSoundSource);
+                break;
+            case RANK_B:
+                sLetterGrade = 'B';
+                play_sound(SOUND_MARIO_DOH, gGlobalSoundSource);
+                break;
+            case RANK_C:
+                sLetterGrade = 'C';
+                play_sound(SOUND_MARIO_WAAAOOOW, gGlobalSoundSource);
+                break;
+            case RANK_F:
+                sLetterGrade = 'F';
+                play_sound(SOUND_MARIO_GAME_OVER, gGlobalSoundSource);
+                break;
+            default:
+                sLetterGrade = '-';
+                break;
+            }
+            gResultsPhase = PHASE_SAVE_SCORE;
+            break;
+        case PHASE_SAVE_SCORE:
+            //Save best time
+            if (((gBestTime == 0) || gHudDisplay.timer < gBestTime)) {
+                save_file_set_time(gHudDisplay.timer);
+                save_file_set_rank(gRank);
+                //Play star fanfare if better than best time and target time
+                if(gHudDisplay.timer <= gSlideTimeToBeat){
+                    play_star_fanfare();
+                    gIsBestSlideTime = TRUE;
+                }
+            }
+            gResultsPhase = PHASE_END;
+            break;
+        //Display the final rank, then wait for the player to press A or Start to proceed
+        case PHASE_END:
+            sprintf(textBytes, "Rank: %c", sLetterGrade);
+            print_small_text(20, 80, textBytes, PRINT_TEXT_ALIGN_LEFT, PRINT_ALL, FONT_OUTLINE);
+            print_small_text(SCREEN_WIDTH / 2, 200, "Press A To Continue", PRINT_TEXT_ALIGN_CENTER, PRINT_ALL, FONT_DEFAULT);
+            if(gIsBestSlideTime) {
+                print_set_envcolour(0xF2, 0xF3, 0x91, 0xFF);
+                print_small_text(SCREEN_WIDTH / 2, (SCREEN_HEIGHT / 2) + 20, "NEW RECORD!", PRINT_TEXT_ALIGN_CENTER, PRINT_ALL, FONT_VANILLA);
+            }
+
+            //Proceed
+            if(gPlayer1Controller->buttonPressed & (A_BUTTON | START_BUTTON)) {
+                gMenuMode = MENU_MODE_NONE;
+                gCourseDoneMenuTimer = 0;
+                gResultsPhase = PHASE_INIT;
+                save_file_do_save(gCurrSaveFileNum - 1);
+                return MENU_OPT_DEFAULT;
+            }
+            break;
+    }
+
+    //The player can skip the count during any of these phases
+    if((gResultsPhase == PHASE_COUNT_TARGET_TIME) || 
+    (gResultsPhase == PHASE_COUNT_YOUR_TIME) ||
+    (gResultsPhase == PHASE_COUNT_BEST_TIME)) {
+        if(gPlayer1Controller->buttonPressed & (A_BUTTON | START_BUTTON)) {
+            gRunningDisplayTimeToBeat[0] = gDisplayTimeToBeat[0];
+            gRunningDisplayTimeToBeat[1] = gDisplayTimeToBeat[1];
+            gRunningDisplayTimeToBeat[2] = gDisplayTimeToBeat[2];
+            gRunningDisplayYourTime[0] = gDisplayYourTime[0];
+            gRunningDisplayYourTime[1] = gDisplayYourTime[1];
+            gRunningDisplayYourTime[2] = gDisplayYourTime[2];
+            gRunningDisplayBestTime[0] = gDisplayBestTime[0];
+            gRunningDisplayBestTime[1] = gDisplayBestTime[1];
+            gRunningDisplayBestTime[2] = gDisplayBestTime[2];
+            gResultsPhase = PHASE_CALCULATE_RANK;
+        }
+    }
+    
+    //Tutorial slide, don't show score
+    if(gSlideTimeToBeat == 0xFFFF){
+        print_small_text(20, 20, "Time to beat: --'--\"--", PRINT_TEXT_ALIGN_LEFT, PRINT_ALL, FONT_OUTLINE);
+        print_small_text(20, 40, "Your Time: --'--\"--", PRINT_TEXT_ALIGN_LEFT, PRINT_ALL, FONT_OUTLINE);
+        print_small_text(20, 60, "Best Time: --'--\"--", PRINT_TEXT_ALIGN_LEFT, PRINT_ALL, FONT_OUTLINE);
+    }else {
+        sprintf(textBytes, "Time to beat: %.2d'%.2d\"%.3d", gRunningDisplayTimeToBeat[0], gRunningDisplayTimeToBeat[1], gRunningDisplayTimeToBeat[2]);
+        print_small_text(20, 20, textBytes, PRINT_TEXT_ALIGN_LEFT, PRINT_ALL, FONT_OUTLINE);
+    
+        sprintf(textBytes, "Your Time: %.2d'%.2d\"%.3d", gRunningDisplayYourTime[0], gRunningDisplayYourTime[1], gRunningDisplayYourTime[2]);
+        print_small_text(20, 40, textBytes, PRINT_TEXT_ALIGN_LEFT, PRINT_ALL, FONT_OUTLINE);
+
+        //If best time exists, display it
+        if(gBestTime > 0) {
+            sprintf(textBytes, "Best Time: %.2d'%.2d\"%.3d", gRunningDisplayBestTime[0], gRunningDisplayBestTime[1], gRunningDisplayBestTime[2]);
+            print_small_text(20, 60, textBytes, PRINT_TEXT_ALIGN_LEFT, PRINT_ALL, FONT_OUTLINE);
+        }
+    }
+    
+
+    return MENU_OPT_NONE;
+}
+
 s32 render_menus_and_dialogs(void) {
     s32 mode = MENU_OPT_NONE;
 
@@ -2211,8 +2503,8 @@ s32 render_menus_and_dialogs(void) {
             case MENU_MODE_RENDER_COURSE_COMPLETE_SCREEN:
                 mode = render_course_complete_screen();
                 break;
-            case MENU_MODE_UNUSED_3:
-                mode = render_course_complete_screen();
+            case MENU_MODE_RESULTS_SCREEN:
+                mode = render_results_screen();
                 break;
         }
 
